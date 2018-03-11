@@ -1,3 +1,4 @@
+
 # coding: utf-8
 
 # In[2]:
@@ -18,6 +19,9 @@ import pickle
 def abs_sobel_thresh(img, orient='x',sobel_kernel=3,thresh=(0,255)):
     # Convert to grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    # try this Adi
+    gray = cv2.GaussianBlur(gray,(sobel_kernel,sobel_kernel),0)
+
     # Apply x or y gradient with the OpenCV Sobel() function
     # and take the absolute value
     if orient == 'x':
@@ -46,11 +50,14 @@ def mag_thresh(img, sobel_kernel=3, mag_thresh=(0, 255)):
     # Apply the following steps to img
     # 1) Convert to grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    # try this Adi
+    gray = cv2.GaussianBlur(gray,(sobel_kernel,sobel_kernel),0)
+
     # 2) Take the gradient in x and y separately
     sobelx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=sobel_kernel)
     sobely = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=sobel_kernel)
-    print(sobelx.shape)
-    print(sobely.shape)
+    #print(sobelx.shape)
+    #print(sobely.shape)
     # 3) Calculate the magnitude 
     gradmag = np.sqrt(sobelx**2 + sobely**2)
     #print(gradmag)
@@ -75,6 +82,9 @@ def mag_thresh(img, sobel_kernel=3, mag_thresh=(0, 255)):
 def dir_threshold(img, sobel_kernel=3, thresh=(0, np.pi/2)):
     # Grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    # try this Adi
+    gray = cv2.GaussianBlur(gray,(sobel_kernel,sobel_kernel),0)
+
     # Calculate the x and y gradients
     sobelx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=sobel_kernel)
     sobely = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=sobel_kernel)
