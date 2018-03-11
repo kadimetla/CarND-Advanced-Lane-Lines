@@ -72,7 +72,8 @@ I did lot of playing with colors and gradients in it's  own IPython notebooks.
 2. gradient thresholds I played in "play_magnitude_thresholds.ipynb". I exported the file and used as python file "magnitude_thresholds.py" code.
 
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at method color_and_gradient in `advanced_lane_finding.ipynb`).  Here's an example of my output for this step. test images with pipeline original image -> undistored image -> color and combined managnitude -> binary warped -> lane lines using histogram and polynomial -> lane lines area drawn on the image.
+I had problem writing so I saved as figure. which contains entire pipe line of transformation.
 
 ![alt text][image3]
 
