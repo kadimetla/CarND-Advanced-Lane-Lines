@@ -145,12 +145,15 @@ pipe line fails during the curves, as I did not smooth the lane lines from previ
 Below points are important, I have to do them for smooth lane flow.
 
 1. **Sanity Check**
+
 Ok, so your algorithm found some lines. Before moving on, you should check that the detection makes sense. To confirm that your detected lane lines are real, you might consider:
 
 Checking that they have similar curvature
 Checking that they are separated by approximately the right distance horizontally
 Checking that they are roughly parallel
+
 2. **Look-Ahead Filter**
+
 Once you've found the lane lines in one frame of video, and you are reasonably confident they are actually the lines you are looking for, you don't need to search blindly in the next frame. You can simply search within a window around the previous detection.
 
 For example, if you fit a polynomial, then for each y position, you have an x position that represents the lane center from the last frame. Search for the new line within +/- some margin around the old line center.
@@ -160,7 +163,9 @@ Double check the bottom of the page here to remind yourself how this works.
 Then check that your new line detections makes sense (i.e. expected curvature, separation, and slope).
 
 3. **Reset**
+
 If your sanity checks reveal that the lane lines you've detected are problematic for some reason, you can simply assume it was a bad or difficult frame of video, retain the previous positions from the frame prior and step to the next frame to search again. If you lose the lines for several frames in a row, you should probably start searching from scratch using a histogram and sliding window, or another method, to re-establish your measurement.
 
 4. **Smoothing**
+
 Even when everything is working, your line detections will jump around from frame to frame a bit and it can be preferable to smooth over the last n frames of video to obtain a cleaner result. Each time you get a new high-confidence measurement, you can append it to the list of recent measurements and then take an average over n past measurements to obtain the lane position you want to draw onto the image.
