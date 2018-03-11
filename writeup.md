@@ -79,7 +79,7 @@ I had problem writing so I saved as figure. which contains entire pipe line of t
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+The code for my perspective transform includes a function called `perspective_transform(image)`, which appears in IPython notebook 'advanced_lane_finding.ipynb'. The `perspective_transform(image)` function takes as inputs an image (`image`), source (`src`) and destination (`dst`) points are defined in the function.  I computed source and destination points using precentages as shown the advanced lane line video project. I did try hardcode source and destination. I am having problem with coming with right  source and destination points for perspective transformation and warped binary image.
 
 ```python
 src = np.float32(
@@ -109,17 +109,18 @@ I verified that my perspective transform was working as expected by drawing the 
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+The code handle is coded in class LocateLaneLines. Which is used in the pipe line. 
+Then I did histogram and fit my lane lines with a 2nd order polynomial using sliding window kinda like this:
 
 ![alt text][image5]
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+I did this in class LocateLaneLines to compute using measure_lane_lines_curvature_in_real_world_space in the IPython notebook file `advanced_lane_finding.ipynb`
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+I implemented this step in IPython notebook file `advanced_lane_finding.ipynb` in the function `undistorted_image_with_lane_area_drawn`.  Here is an example of my result on a test image:
 
 ![alt text][image6]
 
@@ -137,4 +138,29 @@ Here's a [https://s3-us-west-2.amazonaws.com/udacity.selfdrivecar/P4/project_vid
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further. 
+
+pipe line fails during the curves, as I did not smooth the lane lines from previous frames. I also feel binary warped images are also contributing to the cause.
+
+Below points are important, I have to do them for smooth lane flow.
+
+1. **Sanity Check**
+Ok, so your algorithm found some lines. Before moving on, you should check that the detection makes sense. To confirm that your detected lane lines are real, you might consider:
+
+Checking that they have similar curvature
+Checking that they are separated by approximately the right distance horizontally
+Checking that they are roughly parallel
+2. **Look-Ahead Filter**
+Once you've found the lane lines in one frame of video, and you are reasonably confident they are actually the lines you are looking for, you don't need to search blindly in the next frame. You can simply search within a window around the previous detection.
+
+For example, if you fit a polynomial, then for each y position, you have an x position that represents the lane center from the last frame. Search for the new line within +/- some margin around the old line center.
+
+Double check the bottom of the page here to remind yourself how this works.
+
+Then check that your new line detections makes sense (i.e. expected curvature, separation, and slope).
+
+3. **Reset**
+If your sanity checks reveal that the lane lines you've detected are problematic for some reason, you can simply assume it was a bad or difficult frame of video, retain the previous positions from the frame prior and step to the next frame to search again. If you lose the lines for several frames in a row, you should probably start searching from scratch using a histogram and sliding window, or another method, to re-establish your measurement.
+
+4. **Smoothing**
+Even when everything is working, your line detections will jump around from frame to frame a bit and it can be preferable to smooth over the last n frames of video to obtain a cleaner result. Each time you get a new high-confidence measurement, you can append it to the list of recent measurements and then take an average over n past measurements to obtain the lane position you want to draw onto the image.
