@@ -82,26 +82,25 @@ I had problem writing so I saved as figure. which contains entire pipe line of t
 The code for my perspective transform includes a function called `perspective_transform(image)`, which appears in IPython notebook 'advanced_lane_finding.ipynb'. The `perspective_transform(image)` function takes as inputs an image (`image`), source (`src`) and destination (`dst`) points are defined in the function.  I computed source and destination points using precentages as shown the advanced lane line video project. I did try hardcode source and destination. I am having problem with coming with right  source and destination points for perspective transformation and warped binary image.
 
 ```python
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
+src = np.float32([[545, 460],
+                    [735, 460],
+                    [1280, 700],
+                    [0, 700]])
+    
+    dst = np.float32([[0, 0],
+                     [1280, 0],
+                     [1280, 720],
+                     [0, 720]])
 ```
 
 This resulted in the following source and destination points:
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
+| 545, 460      | 0, 0        | 
+| 735, 460      | 1280, 0      |
+| 1280, 700     | 1280, 720      |
+| 0, 700        | 0, 720        |
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
@@ -130,7 +129,7 @@ I implemented this step in IPython notebook file `advanced_lane_finding.ipynb` i
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [https://s3-us-west-2.amazonaws.com/udacity.selfdrivecar/P4/project_video.mp4]
+Here's a [https://s3-us-west-2.amazonaws.com/udacity.selfdrivecar/P41/project_video.mp4]
 
 ---
 
